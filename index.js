@@ -6,26 +6,37 @@ const axios = require("axios");
 
 let newSMS = true;
 
+// test txt
+txt();
+
 setInterval(ping, 60000);
 
 async function ping() {
-  const { status } = await axios.get(process.env.URL);
-  if (status !== 200 && newSMS) {
-    client.messages
-      .create({
-        body: new Date().toLocaleString("en-US", {
-          timeZone: "America/New_York",
-        }),
-        from: process.env.FROM_NUMBER,
-        to: process.env.TO_NUMBER,
-      })
-      .then((message) => console.log(message.sid))
-      .catch((err) => console.log(err));
+  try {
+    const { status } = await axios.get(process.env.URL);
+    if (status !== 200 && newSMS) {
+      txt();
+    }
 
-    newSMS = false;
+    if (status == 200) {
+      newSMS = true;
+    }
+  } catch (error) {
+    console.log(error);
   }
+}
 
-  if (status == 200) {
-    newSMS = true;
-  }
+function txt() {
+  client.messages
+    .create({
+      body: new Date().toLocaleString("en-US", {
+        timeZone: "America/New_York",
+      }),
+      from: process.env.FROM_NUMBER,
+      to: process.env.TO_NUMBER,
+    })
+    .then((message) => console.log(message.sid))
+    .catch((err) => console.log(err));
+
+  newSMS = false;
 }
