@@ -22,7 +22,9 @@ async function ping() {
       newSMS = true;
     }
   } catch (error) {
-    txt();
+    if (newSMS) {
+      txt();
+    }
   }
 }
 
